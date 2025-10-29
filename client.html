@@ -8,7 +8,6 @@
         <script> var socket = io(); </script>
         <script>
             let livres = [];
-
             fetch("livres.json")
                 .then(response => response.json())
                 .then(data => {
@@ -131,5 +130,6 @@
 
         <textarea id="messages" rows="20" cols="75"></textarea>
     </body>
+
 
 </html>
