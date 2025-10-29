@@ -7,6 +7,18 @@
         <script src="/socket.io/socket.io.js"></script>
         <script> var socket = io(); </script>
         <script>
+            let livres = [];
+
+            fetch("livres.json")
+                .then(response => response.json())
+                .then(data => {
+                    livres = data;
+                    console.log("Fichier JSON chargé :", livres);
+                    // utlisation des livres ici plus tard
+                }) 
+                .catch(err => console.error("Erreur JSON :", err));
+        </script>
+        <script>
             var numJoueur = -1;
 
             function 
@@ -119,6 +131,5 @@
 
         <textarea id="messages" rows="20" cols="75"></textarea>
     </body>
-
 
 </html>
