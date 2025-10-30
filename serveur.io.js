@@ -4,9 +4,8 @@ const http = require('http');
 const server = http.createServer(app);
 const io = new require("socket.io")(server)
 
-app.get('/', (request, response) => {
-    response.sendFile('client.html', {root: __dirname});
-});
+// pour le css
+app.use(express.static(__dirname));
 
 server.listen(8888, () => {
     console.log('Le serveur écoute sur le port 8888');
