@@ -7,12 +7,12 @@ const io = new require("socket.io")(server)
 // pour le css
 app.use(express.static(__dirname));
 
-server.listen(8888, () => {
-    console.log('Le serveur écoute sur le port 8888');
+app.get('/', (request, response) => {
+    response.sendFile('client.html', {root: __dirname});
 });
 
-app.get('/livres.json', (request, response) => {
-    response.sendFile('livres.json', {root: __dirname});
+server.listen(8888, () => {
+    console.log('Le serveur écoute sur le port 8888');
 });
 
 var nbJoueurs = 5;

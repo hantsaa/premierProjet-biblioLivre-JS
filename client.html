@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bibliothèquos</title>
-    <link rel="icon" type="image/x-icon" href="data:image/x-icon;,">
     <link rel="stylesheet" href="style.css">
     
     <!-- Bibliothèques externes -->
@@ -302,41 +301,44 @@
 </head>
 
 <body>
-    <!-- Section des joueurs -->
-    <div id="joueurs">
-        <div>
-            Joueurs : <label id="listeJoueurs"></label>
-        </div>
-        <div style="margin-top: 10px;">
-            Votre nom <input id="nomJ" type="text" />
-            Votre numéro : <label id="numJ"></label>
-            <button type="button" id="btentree" onclick="entrerDansLaPartie()">
-                Entrer dans la partie
-            </button>
-            <button type="button" id="btsortie" disabled onclick="quitterLaPartie()">
-                Quitter la partie
-            </button>
-        </div>
+    <!-- Panneau de gauche : contrôles / chat -->
+    <div class="left-panel">
+        <!-- Section des joueurs -->
+        <section id="joueurs">
+            <div>
+                Joueurs : <label id="listeJoueurs"></label>
+            </div>
+            <div style="margin-top: 10px;">
+                Votre nom <input id="nomJ" type="text" />
+                Votre numéro : <label id="numJ"></label>
+                <button type="button" id="btentree" onclick="entrerDansLaPartie()">Entrer dans la partie</button>
+                <button type="button" id="btsortie" disabled onclick="quitterLaPartie()">Quitter la partie</button>
+            </div>
+        </section>
+
+        <hr/>
+
+        <!-- Message du serveur -->
+        <section id="champMessageServeur">
+            <div>Message du serveur :</div>
+            <label id="messageServeur"></label>
+        </section>
+
+        <hr/>
+
+        <!-- Section chat -->
+        <section id="champMessage">
+            <div>
+                <label for="message">Votre message</label>
+                <input id="message" type="text" class="message-input" onchange="envoiMessage(this)"/>
+            </div>
+            <textarea id="messages" rows="20" cols="25" readonly></textarea>
+        </section>
     </div>
 
-    <hr/>
-    
-    <!-- Message du serveur -->
-    <div>
-        Message du serveur : <label id="messageServeur"></label>
+    <!-- Panneau de droite : visualisation -->
+    <div class="right-panel">
+        <svg id="bibliotheque" width="100%" height="600"></svg>
     </div>
-    
-    <hr/>
-
-    <!-- Section chat -->
-    <div>
-        <div>
-            Votre message <input id="message" type="text" class="message-input" onchange="envoiMessage(this)"/>
-        </div>
-        <textarea id="messages" rows="20" cols="25" readonly></textarea>
-    </div>
-
-    <!-- Visualisation de la bibliothèque -->
-    <svg id="bibliotheque" width="600" height="600"></svg>
 </body>
 </html>
