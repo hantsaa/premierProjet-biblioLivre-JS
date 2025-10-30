@@ -8,13 +8,19 @@ app.get('/', (request, response) => {
     response.sendFile('client.html', {root: __dirname});
 });
 
+server.listen(8888, () => {
+    console.log('Le serveur écoute sur le port 8888');
+});
+
+app.get('/livres.json', (request, response) => {
+    response.sendFile('livres.json', {root: __dirname});
+});
+
 var nbJoueurs = 5;
 var joueurs = [];
 var jeton = -1;
   
-server.listen(8888, () => {
-    console.log('Le serveur écoute sur le port 8888');
-});
+
 
 io.on('connection', (socket) => {
 

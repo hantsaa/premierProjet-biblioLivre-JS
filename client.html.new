@@ -369,7 +369,7 @@
         <div>
             Votre message <input id="message" type="text" class="message-input" onchange="envoiMessage(this)"/>
         </div>
-        <textarea id="messages" rows="20" cols="25" readonly></textarea>
+        <textarea id="messages" rows="20" cols="75" readonly></textarea>
     </div>
 
     <!-- Visualisation de la bibliothèque -->
