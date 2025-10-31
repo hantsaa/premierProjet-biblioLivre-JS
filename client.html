@@ -27,7 +27,7 @@
                 .then(data => {
                     livres = data;
                     console.log("Fichier JSON chargé :", livres);
-                    initialiserBibliotheque();
+                    //initialiserBibliotheque();
                 })
                 .catch(err => console.error("Erreur JSON :", err));
         }
@@ -293,7 +293,24 @@
             dessinerAncrages();
             dessinerCaisse();
             remplirCaisse();
-        }
+            let nbTours = 5;
+            let tourActuel = 0;
+
+            // Démarre un intervalle qui s'exécute toutes les 3 secondes
+            const inter = setInterval(() => {
+                tourActuel++;
+                remplirCaisse();
+
+                console.log(`Tour ${tourActuel} / ${nbTours}`);
+
+                if (tourActuel >= nbTours) {
+                clearInterval(inter); // Stoppe après 5 fois
+                console.log("Fin de la partie !");
+                arreterPartie();
+                }
+            }, 10000);
+            }
+                                                
 
         // Chargement initial
         document.addEventListener('DOMContentLoaded', chargerLivres);
@@ -313,6 +330,7 @@
                 Votre numéro : <label id="numJ"></label>
                 <button type="button" id="btentree" onclick="entrerDansLaPartie()">Entrer dans la partie</button>
                 <button type="button" id="btsortie" disabled onclick="quitterLaPartie()">Quitter la partie</button>
+                <button onclick="initialiserBibliotheque()">Lancer la partie</button>
             </div>
         </section>
 
