@@ -27,7 +27,7 @@
                 .then(data => {
                     livres = data;
                     console.log("Fichier JSON chargé :", livres);
-                    initialiserBibliotheque();
+                    //initialiserBibliotheque();
                 })
                 .catch(err => console.error("Erreur JSON :", err));
         }
@@ -173,7 +173,7 @@
 
         function dessinerEtageres() {
             const svg = d3.select("#bibliotheque");
-            svg.selectAll(".etagere")
+            svg.selectAll(".etagere")//on selectionne les 4 "etageres" dans liste etagere
                 .data(etageres)
                 .enter()
                 .append("rect")
@@ -246,6 +246,7 @@
                 const ancrage = caisse.ancrage[i];
                 svg.append("rect")
                     .attr("class", "livre")
+                    .datum(li) // ici c'est l'IA qui m'a dit de le mettre car d'après elle, etageres.livres serait toujours vide et le score ne pourrait rien compter
                     .attr("x", ancrage.x - largeurLivre/2)
                     .attr("y", ancrage.y - hauteurLivre)
                     .attr("width", largeurLivre)
@@ -278,22 +279,107 @@
             if (livreSelec.ancrage)
                 livreSelec.ancrage.pleins = false;
 
+            const dataLivre = d3.select(livreSelec).datum(); // IA qui m'a donné ceci pour pouvoir vraiment récuperer le livre (pour le score)
+
             d3.select(livreSelec)
                 .attr("x", ancrage.x - largeurLivre / 2)
                 .attr("y", ancrage.y - hauteurLivre)
-                .on("end", () => {
-                    ancrage.pleins = true;
-                    livreSelec.ancrage = ancrage;
-                    livreSelec = null;
-                });
+                
+                ancrage.pleins = true;
+                livreSelec.ancrage = ancrage;
+                etagere.livres.push(dataLivre); // ajout 
+                scoreTot(); // appel de la fonction pour recalculer le score 
+                livreSelec = null;
+
+                
         }
+
+
 
         function initialiserBibliotheque() {
             dessinerEtageres();
             dessinerAncrages();
             dessinerCaisse();
             remplirCaisse();
+            let nbTours = 5;
+            let tourActuel = 0;
+
+            // Démarre un intervalle qui s'exécute toutes les 3 secondes
+            const inter = setInterval(() => {
+                tourActuel++;
+                remplirCaisse();
+
+                console.log(`Tour ${tourActuel} / ${nbTours}`);
+
+                if (tourActuel >= nbTours) {
+                clearInterval(inter); // Stop après 5 fois
+                console.log("Fin de la partie !");
+                arreterPartie();
+                }
+            }, 10000);
+            }
+
+        // ====================================
+        // 6. Gestion du score
+        // ====================================
+
+        function score(etagere) {
+        const livres = etagere.livres;
+        let score = 0;
+
+        if (livres.length <= 1) {
+            return 0;
         }
+        let nbformat = {}; //on compte les nombres de format similaires
+        let nbGenre = {}; //idem
+
+        for (let i = 0; i < livres.length; i++) {
+            let genre = livres[i].genre;
+            let format = livres[i].format;
+
+        
+            if (nbformat[format] === undefined) {
+                nbformat[format] = 1;
+            } else {
+                nbformat[format]++;
+            }
+            if (nbGenre[genre] === undefined) {
+                nbGenre[genre] = 1;
+            } else {
+                nbGenre[genre]++;
+            }
+
+        }
+        
+        for (let format in nbformat) {
+            if (nbformat[format] >= 2) {
+                score += 2;
+            }// format identiques → +2 points
+        }
+        for (let genre in nbGenre) {
+            if (nbGenre[genre] >= 2) {
+                score += 3;
+            }
+        }// Genres identiques → +3 point
+
+        return score;
+    }
+
+    function scoreTot() {
+    let total = 0;
+
+    for (let i = 0; i < etageres.length; i++) {
+        let s = score(etageres[i]);
+        console.log("Étagère", i, "score =", s);
+        total += s;
+    }
+
+    console.log("Score total =", total);
+    const label = document.getElementById('scoreJ')
+    label.textContent = total ; 
+    return;
+    }
+
 
         // Chargement initial
         document.addEventListener('DOMContentLoaded', chargerLivres);
@@ -311,8 +397,10 @@
             <div style="margin-top: 10px;">
                 Votre nom <input id="nomJ" type="text" />
                 Votre numéro : <label id="numJ"></label>
+                   Votre Score : <label id="scoreJ">0</label>
                 <button type="button" id="btentree" onclick="entrerDansLaPartie()">Entrer dans la partie</button>
                 <button type="button" id="btsortie" disabled onclick="quitterLaPartie()">Quitter la partie</button>
+                <button onclick="initialiserBibliotheque()">Lancer la partie</button>
             </div>
         </section>
 
