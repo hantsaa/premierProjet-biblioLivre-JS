@@ -6,43 +6,44 @@
     <title>Bibliothèquos</title>
     <link rel="stylesheet" href="style.css">
     
-    <!-- Bibliothèques externes -->
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
 
-    <!-- Scripts -->
     <script>
-        // Initialisation Socket.IO
         const socket = io();
 
-        // ====================================
-        // 1. Gestion de la bibliothèque
-        // ====================================
+// ====================================
+// 1. Gestion de la bibliothèque
+// ====================================
         let livres = [];
         
-        // Chargement des livres depuis le fichier JSON
-        function chargerLivres() {
+        // chargement des livres du fichier JSON
+        function chargerLivres()
+        {
             fetch("livres.json")
                 .then(response => response.json())
                 .then(data => {
                     livres = data;
                     console.log("Fichier JSON chargé :", livres);
-                    //initialiserBibliotheque();
+                    //initialiserBibliotheque(); test
                 })
                 .catch(err => console.error("Erreur JSON :", err));
         }
 
-        // ====================================
-        // 2. Gestion des joueurs
-        // ====================================
+
+// ====================================
+// 2. Gestion des joueurs
+// ====================================
         let numJoueur = -1;
 
-        function demandeJoueurs() {
+        function demandeJoueurs()
+        {
             console.log('Demande des joueurs');
             socket.emit('joueurs');
         }
 
-        function entrerDansLaPartie() {
+        function entrerDansLaPartie()
+        {
             let nom = nomJ.value;
             if (nom && nom.trim()) {
                 console.log("Entrée de " + nom);
@@ -50,7 +51,8 @@
             }
         }
 
-        function quitterLaPartie() {
+        function quitterLaPartie() 
+        {
             let nom = nomJ.value;
             if (nom && nom.trim()) {
                 console.log("Sortie de " + nom);
@@ -58,10 +60,12 @@
             }
         }
 
-        // ====================================
-        // 3. Gestion du chat
-        // ====================================
-        function envoiMessage(input) {
+
+// ====================================
+// 3. Gestion du chat
+// ====================================
+        function envoiMessage(input) 
+        {
             if (input.value.trim()) {
                 console.log("Envoi du message :", input.value);
                 socket.emit("message", {
@@ -71,15 +75,17 @@
             }
         }
 
-        function ajouterMessage(message) {
+        function ajouterMessage(message) 
+        {
             let textarea = document.getElementById('messages');
             textarea.value += (textarea.value ? '\n' : '') + message;
             textarea.scrollTop = textarea.scrollHeight;
         }
 
-        // ====================================
-        // 4. Écouteurs Socket.IO
-        // ====================================
+
+// ====================================
+// 4. Écouteurs Socket.IO
+// ====================================
         
         // Événements liés aux joueurs
         socket.on('joueurs', nomsJoueurs => {
@@ -135,9 +141,10 @@
             document.getElementById('messageServeur').textContent = message;
         });
 
-        // ====================================
-        // 5. Visualisation D3.js
-        // ====================================
+
+// ====================================
+// 5. Visu D3.js
+// ====================================
         
         // Configuration de la visualisation
         const largeurLivre = 40;
@@ -152,7 +159,8 @@
 
         // Configuration des étagères
         const etageres = [];
-        for (let i = 0; i < nbEtagere; i++) {
+        for (let i = 0; i < nbEtagere; i++) 
+        {
             etageres.push({
                 id: i,
                 y: 70 + i * 120,
@@ -171,7 +179,8 @@
             livres: []
         };
 
-        function dessinerEtageres() {
+        function dessinerEtageres() 
+        {
             const svg = d3.select("#bibliotheque");
             svg.selectAll(".etagere")//on selectionne les 4 "etageres" dans liste etagere
                 .data(etageres)
@@ -185,7 +194,8 @@
                 .attr("fill", "#8b5a2b");
         }
 
-        function dessinerAncrages() {
+        function dessinerAncrages() 
+        {
             const svg = d3.select("#bibliotheque");
             etageres.forEach(et => {
                 for (let i = 0; i < nbAncrages; i++) {
@@ -208,7 +218,8 @@
             });
         }
 
-        function dessinerCaisse() {
+        function dessinerCaisse() 
+        {
             const svg = d3.select("#bibliotheque");
             svg.append("rect")
                 .attr("class", "caisse")
@@ -238,7 +249,8 @@
             }
         }
 
-        function remplirCaisse() {
+        function remplirCaisse()
+        {
             const svg = d3.select("#bibliotheque");
             const random_elem = d3.shuffle(livres).slice(0, 3);
 
@@ -270,7 +282,8 @@
             });
         }
 
-        function depoLivre(etagere, indexAncrage) {
+        function depoLivre(etagere, indexAncrage)
+        {
             const ancrage = etagere.ancrages[indexAncrage];
 
             if (ancrage.pleins) 
@@ -290,13 +303,12 @@
                 etagere.livres.push(dataLivre); // ajout 
                 scoreTot(); // appel de la fonction pour recalculer le score 
                 livreSelec = null;
-
-                
         }
 
 
 
-        function initialiserBibliotheque() {
+        function initialiserBibliotheque()
+        {
             dessinerEtageres();
             dessinerAncrages();
             dessinerCaisse();
@@ -318,74 +330,79 @@
                 arreterPartie();
                 }
             }, 10000);
-            }
+        }
 
-        // ====================================
-        // 6. Gestion du score 
-        // ====================================
 
-        function score(etagere) {
+// ====================================
+// 6. Gestion du score 
+// ====================================
+
+    function score(etagere)
+    {
         const livres = etagere.livres;
         let score = 0;
 
-        if (livres.length <= 1) {
+        if (livres.length <= 1)
             return 0;
-        }
+    
         let nbformat = {}; //on compte les nombres de format similaires
         let nbGenre = {}; //idem
 
-        for (let i = 0; i < livres.length; i++) {
+        for (let i = 0; i < livres.length; i++)
+        {
             let genre = livres[i].genre;
             let format = livres[i].format;
 
-        
-            if (nbformat[format] === undefined) {
+            if (nbformat[format] === undefined)
                 nbformat[format] = 1;
-            } else {
+            else
                 nbformat[format]++;
-            }
-            if (nbGenre[genre] === undefined) {
-                nbGenre[genre] = 1;
-            } else {
-                nbGenre[genre]++;
-            }
 
+            if (nbGenre[genre] === undefined)
+                nbGenre[genre] = 1;
+            else
+                nbGenre[genre]++;
         }
         
-        for (let format in nbformat) {
-            if (nbformat[format] >= 2) {
+        // si format idenntique alors 2 points de plus
+        for (let format in nbformat) 
+        {
+            if (nbformat[format] >= 2)
                 score += 2;
-            }// format identiques → +2 points
-        }
-        for (let genre in nbGenre) {
-            if (nbGenre[genre] >= 2) {
+        } 
+        
+        // Si genres identiques alors 3 points de plus
+        for (let genre in nbGenre) 
+        {
+            if (nbGenre[genre] >= 2)
                 score += 3;
-            }
-        }// Genres identiques → +3 point
+        } 
 
         return score;
     }
 
-    function scoreTot() {
-    let total = 0;
+    function scoreTot() 
+    {
+        let total = 0;
 
-    for (let i = 0; i < etageres.length; i++) {
-        let s = score(etageres[i]);
-        console.log("Étagère", i, "score =", s);
-        total += s;
+        for (let i = 0; i < etageres.length; i++) {
+            let s = score(etageres[i]);
+            console.log("Étagère", i, "score =", s);
+            total += s;
+        }
+
+        console.log("Score total =", total);
+        const label = document.getElementById('scoreJ')
+        label.textContent = total ; 
+        return;
     }
 
-    console.log("Score total =", total);
-    const label = document.getElementById('scoreJ')
-    label.textContent = total ; 
-    return;
-    }
 
-    
-        // Chargement initial
-        document.addEventListener('DOMContentLoaded', chargerLivres);
+    // Chargement initial
+    document.addEventListener('DOMContentLoaded', chargerLivres);
     </script>
 </head>
+
 
 <body>
     <!-- Panneau de gauche : contrôles / chat -->
